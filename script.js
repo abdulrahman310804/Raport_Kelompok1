@@ -1,0 +1,72 @@
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1fzv4tKNk6IyHel5Vudw_dTtY5wOjsnrH7vwWb9lKKpU/gviz/tq?tqx=out:json&sheet=Sheet1';
+
+async function fetchData() {
+  const res = await fetch(SHEET_URL);
+  const text = await res.text();
+  const json = JSON.parse(text.substr(47).slice(0, -2));
+  const rows = json.table.rows;
+
+  return rows.map(row => ({
+    Nama: row.c[0]?.v || '',
+    Kelas: row.c[1]?.v || '',
+    Mapel: row.c[2]?.v || '',
+    Nilai: row.c[3]?.v || ''
+  }));
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  data.forEach((siswa, index) => {
+    const row = document.createElement('tr');
+    const nilaiKosong = siswa.Nilai === '';
+    const readOnly = nilaiKosong ? '' : 'readonly';
+    const buttonLabel = nilaiKosong ? 'Simpan' : 'Edit';
+    
+    row.innerHTML = `
+      <td>${siswa.Nama}</td>
+      <td>${siswa.Kelas}</td>
+      <td>${siswa.Mapel}</td>
+      <td><input type="number" id="nilai-${index}" value="${siswa.Nilai}" min="0" max="100" ${readOnly}/></td>
+      <td><button onclick="handleAksi(${index}, '${siswa.Nama}')">${buttonLabel}</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+async function handleAksi(index, nama) {
+  const input = document.getElementById(`nilai-${index}`);
+  const button = input.parentElement.nextElementSibling.querySelector('button');
+
+  if (input.hasAttribute('readonly')) {
+    input.removeAttribute('readonly');
+    button.textContent = 'Simpan';
+  } else {
+    const nilai = input.value;
+    if (!nilai) {
+      alert('Silakan masukkan nilai terlebih dahulu.');
+      return;
+    }
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzt0C7qaBWKWNLDQ1ztqPsJDs69ebThIWe6SorXzKn8qJnDWDvUJzEIYEJoFInGhfZ8/exec'; // Ganti sesuai URL Web App kamu
+    await fetch(scriptURL, {
+      method: 'POST',
+      body: new URLSearchParams({ nama, nilai })
+    });
+    alert(`Nilai untuk ${nama} berhasil disimpan!`);
+    input.setAttribute('readonly', true);
+    button.textContent = 'Edit';
+  }
+}
+
+document.getElementById('searchInput').addEventListener('input', async (e) => {
+  const keyword = e.target.value.toLowerCase();
+  if (keyword.length >= 3) {
+    const data = await fetchData();
+    const filtered = data.filter(d => d.Nama.toLowerCase().includes(keyword));
+    renderTable(filtered);
+  } else {
+    document.getElementById('tableBody').innerHTML = '';
+  }
+});
