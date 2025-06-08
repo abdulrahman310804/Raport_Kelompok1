@@ -5,16 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pengisian Rapor - SMPN 1 Bandar Lampung</title>
   <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <div class="header fade-in">
+      <div class="school-logo">🏫</div>
       <h1>Pengisian Rapor</h1>
       <p class="subtitle">SMPN 1 Bandar Lampung</p>
+      <div class="header-decoration"></div>
     </div>
     
     <div class="search-container fade-in">
-      <input type="text" id="searchInput" placeholder="Cari nama siswa... (min. 3 huruf)">
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="Cari nama siswa... (min. 3 huruf)">
+        <div class="search-icon">🔍</div>
+      </div>
     </div>
     
     <div class="table-container fade-in">
@@ -23,22 +31,33 @@
         <p>Memuat data...</p>
       </div>
       
-      <table id="dataTable">
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>Kelas</th>
-            <th>Mapel</th>
-            <th>Nilai</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <tr>
-            <td colspan="5" class="no-data">Masukkan minimal 3 huruf untuk mencari siswa</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>👤 Nama</th>
+              <th>🏫 Kelas</th>
+              <th>📚 Mapel</th>
+              <th>📊 Nilai</th>
+              <th>⚡ Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td colspan="5" class="no-data">
+                <div class="empty-state">
+                  <div class="empty-icon">📝</div>
+                  <p>Masukkan minimal 3 huruf untuk mencari siswa</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="footer fade-in">
+      <p>&copy; 2024 SMPN 1 Bandar Lampung - Sistem Pengisian Rapor</p>
     </div>
   </div>
   <script src="script.js"></script>
