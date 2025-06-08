@@ -256,6 +256,7 @@ document.getElementById('searchInput').addEventListener('input', async (e) => {
 
 // Enhanced interactive effects
 document.addEventListener('DOMContentLoaded', function() {
+  tampilkanDaftarNama();
   // Add enhanced hover effect to search input
   const searchInput = document.getElementById('searchInput');
   
@@ -482,3 +483,24 @@ function initializeApp() {
 
 // Call initialization
 initializeApp();
+async function tampilkanDaftarNama() {
+  try {
+    const data = await getCachedData();
+    const daftarDiv = document.getElementById('daftarNama');
+
+    if (!data || data.length === 0) {
+      daftarDiv.innerHTML = '<p>Tidak ada nama siswa yang terdata.</p>';
+      return;
+    }
+
+    const namaList = data.map(s => `<li>${s.Nama}</li>`).join('');
+    daftarDiv.innerHTML = `
+      <div class="nama-wrapper">
+        <h3>📋 Daftar Nama Siswa</h3>
+        <ul>${namaList}</ul>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Gagal menampilkan daftar nama:', error);
+  }
+}
