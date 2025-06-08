@@ -316,4 +316,169 @@ const additionalStyles = `
 }
 
 .btn-edit {
-  background: linear-gradient(135deg,
+  background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-close:hover {
+  opacity: 0.7;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@media (max-width: 768px) {
+  .notification {
+    top: 10px !important;
+    right: 10px !important;
+    left: 10px !important;
+    max-width: none !important;
+  }
+  
+  .badge-kelas, .badge-mapel {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+}
+</style>
+`;
+
+// Inject additional styles
+document.head.insertAdjacentHTML('beforeend', additionalStyles);
+
+// Add performance optimization
+const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
+// Add input validation
+function validateNilai(nilai) {
+  const num = parseFloat(nilai);
+  return !isNaN(num) && num >= 0 && num <= 100;
+}
+
+// Add data caching for better performance
+let cachedData = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+async function getCachedData() {
+  const now = Date.now();
+  if (cachedData && cacheTimestamp && (now - cacheTimestamp) < CACHE_DURATION) {
+    return cachedData;
+  }
+  
+  const data = await fetchData();
+  cachedData = data;
+  cacheTimestamp = now;
+  return data;
+}
+
+// Add error handling for network issues
+window.addEventListener('online', () => {
+  showNotification('Koneksi internet tersambung kembali', 'success');
+});
+
+window.addEventListener('offline', () => {
+  showNotification('Koneksi internet terputus', 'error');
+});
+
+// Add loading state management
+function setLoadingState(isLoading) {
+  const searchInput = document.getElementById('searchInput');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  
+  if (isLoading) {
+    searchInput.disabled = true;
+    loadingSpinner.style.display = 'block';
+  } else {
+    searchInput.disabled = false;
+    loadingSpinner.style.display = 'none';
+  }
+}
+
+// Enhanced error handling
+function handleError(error, context = '') {
+  console.error(`Error in ${context}:`, error);
+  
+  let errorMessage = 'Terjadi kesalahan yang tidak diketahui';
+  
+  if (error.name === 'TypeError' && error.message.includes('fetch')) {
+    errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+  } else if (error.name === 'SyntaxError') {
+    errorMessage = 'Format data tidak valid dari server.';
+  } else if (error.message) {
+    errorMessage = error.message;
+  }
+  
+  showNotification(errorMessage, 'error');
+}
+
+// Add analytics tracking (optional)
+function trackEvent(eventName, data = {}) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventName, data);
+  }
+  console.log(`Event: ${eventName}`, data);
+}
+
+// Initialize app
+function initializeApp() {
+  console.log('Aplikasi Pengisian Rapor - SMPN 1 Bandar Lampung');
+  console.log('Versi: 2.0.0');
+  console.log('Dikembangkan dengan ❤️');
+  
+  // Track page load
+  trackEvent('page_load', {
+    page_title: document.title,
+    page_location: window.location.href
+  });
+}
+
+// Call initialization
+initializeApp();
