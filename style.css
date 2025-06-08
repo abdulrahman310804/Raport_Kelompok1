@@ -471,4 +471,35 @@ button:active {
   .empty-icon {
     font-size: 2.5rem;
   }
+  .daftar-nama {
+  max-width: 500px;
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 20px 25px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #333;
+  }
+  
+  .daftar-nama h3 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #4a4a4a;
+  }
+  
+  .daftar-nama ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .daftar-nama li {
+    padding: 5px 0;
+    border-bottom: 1px dashed #ccc;
+  }
+  
+  .daftar-nama li:last-child {
+    border-bottom: none;
+  }
 }
